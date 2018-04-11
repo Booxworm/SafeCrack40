@@ -24,8 +24,19 @@ class Puzzle:
                 c = randint(2,floor((40-a-b)*0.6))
                 d = 40-a-b-c
                 self.iterSingle(i,4,[d,c,b,a])
-            # Shuffles the puzzle
+            
+            # Creates random values for those numbers under another number
+            self.push(1)
+            self.push(3)
+            for i in range(16):
+                if i % 2 == 0:
+                    arr2[0][i] = randint(2,20)
+                    arr4[0][i] = randint(2,20)
+                else:
+                    arr3[0][i] = randint(2,20)
+            
             for n in range(1,5):
+                # Shuffles the puzzle
                 rand = randint(1,16)
                 self.push(n, rand)
 
