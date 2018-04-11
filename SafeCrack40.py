@@ -1,3 +1,6 @@
+from random import randint
+from math import floor
+
 class Puzzle:
     # Creating rings: inner to outer
     arr1 =  [13, 0, 3, 0, 3, 0, 6, 0,10, 0,10, 0,10, 0, 6, 0]
@@ -11,6 +14,21 @@ class Puzzle:
     arr4 = [[ 9, 7, 3,12,24,10, 9,22, 9, 5,10, 5, 1,24, 2,10],
             [11,27,10,19,10,13,10, 2,15,23,19, 3, 2, 3,27,20]]
 
+    # Creates a new random puzzle, if default set to False
+    def __init__(self, default=False):
+        if not default:
+        	# Creates random values
+            for i in range(16):
+                a = randint(2,floor(40*0.6))
+                b = randint(2,floor((40-a)*0.6))
+                c = randint(2,floor((40-a-b)*0.6))
+                d = 40-a-b-c
+                self.iterSingle(i,4,[d,c,b,a])
+            # Shuffles the puzzle
+            for n in range(1,5):
+                rand = randint(1,16)
+                self.push(n, rand)
+
     # Selects rings
     def select(self, n):
         switch = {
@@ -21,29 +39,48 @@ class Puzzle:
         }
         return switch.get(n)
 
-    # Pushes a selected ring to the left
-    def push(self, n):
+    # Pushes a selected ring to the left by number of counts
+    def push(self, n, count=1):
         arr = self.select(n)
         if n == 1:
-            temp = arr.pop(0)
-            arr.append(temp)
+            temp = arr[:count]
+            del arr[:count]
+            arr += temp
         else:
-            temp = [arr[0].pop(0), arr[1].pop(0)]
-            arr[0].append(temp[0])
-            arr[1].append(temp[1])
+            temp = [arr[0][:count], arr[1][:count]]
+            del arr[0][:count]
+            del arr[1][:count]
+            arr[0] += temp[0]
+            arr[1] += temp[1]
         return arr
 
     # Returns the sum of a selected row i, starting from a selected ring n (defaults to outer ring)
-    def sumSingle(self, i=0, n=4):
+    # If array of numbers is passed into argument, function replaces the number from outer to inner
+    ### replace=[6,5,2,27] -> 6 goes to 1st (inner) ring, 27 goes to 4th (outer) ring
+    def iterSingle(self, i=0, n=4, replace=[]):
         arr = self.select(n)
+        # Innermost circle
         if n == 1:
-            data = arr[i]
-            return data if data else self.arr2[0][i]
+            if replace:
+                arr[i] = replace.pop(0)
+                return 0
+            else:
+                data = arr[i]
+                return data if data else self.arr2[0][i]
 
+        # Outer three circles
         data = arr[1][i]
         if not data:
-            data = self.select(n+1)[0][i]
-        return data + self.sumSingle(i, n-1)
+            if replace:
+                self.select(n+1)[0][i] = replace.pop()
+                return self.iterSingle(i,n-1,replace)
+            else:
+                data = self.select(n+1)[0][i]
+        else:
+            if replace:
+                arr[1][i] = replace.pop()
+                return self.iterSingle(i, n-1, replace)
+        return data + self.iterSingle(i, n-1)
 
     # Prints the values of the rings
     def printP(self):
@@ -67,10 +104,10 @@ class Puzzle:
         priCount = 0
         secCount = 0
         while True:
-            if self.sumSingle(0) == 40:
+            if self.iterSingle(0) == 40:
                 check = 0
                 for i in range(1,16):
-                    if not self.sumSingle(i) == 40:
+                    if not self.iterSingle(i) == 40:
                         break
                     else: check += 1
                 if check == 15:
@@ -85,7 +122,3 @@ class Puzzle:
                 secCount += 1
                 if secCount % 16 == 0:
                     self.push(3)
-
-# To find the answer
-# p = Puzzle()
-# p.findAns()
