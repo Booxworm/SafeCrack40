@@ -30,10 +30,10 @@ class Puzzle:
             self.push(3)
             for i in range(16):
                 if i % 2 == 0:
-                    arr2[0][i] = randint(2,20)
-                    arr4[0][i] = randint(2,20)
+                    self.arr2[0][i] = randint(2,20)
+                    self.arr4[0][i] = randint(2,20)
                 else:
-                    arr3[0][i] = randint(2,20)
+                    self.arr3[0][i] = randint(2,20)
             
             for n in range(1,5):
                 # Shuffles the puzzle
