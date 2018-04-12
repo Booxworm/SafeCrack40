@@ -3,18 +3,20 @@ from math import floor
 
 class Puzzle:
     # Creating rings: inner to outer
-    arr1 =  [13, 0, 3, 0, 3, 0, 6, 0,10, 0,10, 0,10, 0, 6, 0]
+    # Inner circle of nth ring will be covering part of the outer circle of the (n-1)th ring
+    arr1 =  [13, 0, 3, 0, 3, 0, 6, 0,10, 0,10, 0,10, 0, 6, 0]   # Innermost Ring
 
-    arr2 = [[10, 2, 6,10, 4, 1, 5, 5, 4, 8, 6, 3, 1, 6,10, 6],
-            [22, 0, 2, 0,17, 0,15, 0,14, 0, 5, 0,10, 0, 2, 0]]
+    arr2 = [[10, 2, 6,10, 4, 1, 5, 5, 4, 8, 6, 3, 1, 6,10, 6],  # Inner circle of 2nd ring
+            [22, 0, 2, 0,17, 0,15, 0,14, 0, 5, 0,10, 0, 2, 0]]  # Outer circle of 2nd ring
 
-    arr3 = [[11,27,14, 5, 5, 7, 8,24, 8, 3, 6,15,22, 6, 1, 1],
-            [16, 0,17, 0, 2, 0, 2, 0,10, 0,15, 0, 6, 0, 9, 0]]
+    arr3 = [[11,27,14, 5, 5, 7, 8,24, 8, 3, 6,15,22, 6, 1, 1],  # Inner circle of 3rd ring
+            [16, 0,17, 0, 2, 0, 2, 0,10, 0,15, 0, 6, 0, 9, 0]]  # Outer circle if 3rd ring
 
-    arr4 = [[ 9, 7, 3,12,24,10, 9,22, 9, 5,10, 5, 1,24, 2,10],
-            [11,27,10,19,10,13,10, 2,15,23,19, 3, 2, 3,27,20]]
+    arr4 = [[ 9, 7, 3,12,24,10, 9,22, 9, 5,10, 5, 1,24, 2,10],  # Inner circle of outer ring
+            [11,27,10,19,10,13,10, 2,15,23,19, 3, 2, 3,27,20]]  # Outer circle of outer ring
 
     # Creates a new random puzzle, if default set to False
+    # Else uses the standard puzzle above
     def __init__(self, default=False):
         if not default:
         	# Creates random values
@@ -25,7 +27,7 @@ class Puzzle:
                 d = 40-a-b-c
                 self.iterSingle(i,4,[d,c,b,a])
             
-            # Creates random values for those numbers under another number
+            # Creates random values for the numbers being covered in the inner circles
             self.push(1)
             self.push(3)
             for i in range(16):
